@@ -35,8 +35,8 @@ driver_app/android/key.properties
 driver_app/ios/Runner.xcworkspace/xcshareddata/
 driver_app/ios/Pods/
 
-# Credentials (NEVER commit)
-google-services.json
+# Credentials
+# google-services.json included for CI Android build
 GoogleService-Info.plist
 *.key
 *.keystore

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "537755057329",
+    "project_id": "track-x-fleet-902f6",
+    "storage_bucket": "track-x-fleet-902f6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:537755057329:android:6a8f0c223e57975a777690",
+        "android_client_info": {
+          "package_name": "io.trackx.driver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeuEdpTZSVovbAqlr8v2FThsGtTaaFgac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
+
