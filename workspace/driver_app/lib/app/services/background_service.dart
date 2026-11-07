@@ -15,8 +15,8 @@ class BackgroundService {
         isForegroundMode: true,
         notificationChannelId: 'trackx_tracking',
         foregroundServiceNotificationId: 888,
-        foregroundServiceNotificationTitle: 'TRACKX Active',
-        foregroundServiceNotificationText: 'Location sharing is active',
+        initialNotificationTitle: 'TRACKX Active',
+        initialNotificationContent: 'Location sharing is active',
       ),
       iosConfiguration: IosConfiguration(
         autoStart: false,

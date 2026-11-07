@@ -24,7 +24,7 @@ class LocationService {
   bool _isTracking = false;
   bool _isSharingEnabled = true;
   StreamSubscription<Position>? _positionSubscription;
-  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+  StreamSubscription<ConnectivityResult>? _connectivitySubscription;
   bool _isConnected = true;
   Timer? _stationaryTimer;
   Position? _lastPosition;
@@ -48,19 +48,19 @@ class LocationService {
         InitializationSettings(android: androidSettings);
     await _notifications.initialize(initSettings);
 
-    // Monitor connectivity (v5+ returns List<ConnectivityResult>)
+    // Monitor connectivity
     _connectivitySubscription =
-        Connectivity().onConnectivityChanged.listen((results) {
-      _isConnected = results.any((r) => r != ConnectivityResult.none);
+        Connectivity().onConnectivityChanged.listen((result) {
+      _isConnected = (result != ConnectivityResult.none);
       if (_isConnected) {
         _syncOfflineQueue();
       }
     });
 
-    // Check initial connectivity (v5+ returns List)
-    final List<ConnectivityResult> connectivityResult = 
+    // Check initial connectivity
+    final ConnectivityResult connectivityResult = 
         await Connectivity().checkConnectivity();
-    _isConnected = connectivityResult.any((r) => r != ConnectivityResult.none);
+    _isConnected = (connectivityResult != ConnectivityResult.none);
   }
 
   /// Request precise location and background permissions
