@@ -1,0 +1,124 @@
+rules_version = '2';
+
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: admins
+// Document ID: {adminUid}
+// Fields:
+//   - email: string (required, valid email, max 100)
+//   - name: string (required, max 100)
+//   - role: string (required, value must be 'admin')
+//   - createdAt: number (required, epoch ms)
+//
+// Collection: drivers
+// Document ID: {driverUid}
+// Fields:
+//   - name: string (required, max 100)
+//   - trackingId: string (required, format TRK-XXX)
+//   - status: string (required, 'online' | 'offline' | 'sharing_disabled' | 'location_stale')
+//   - sharingEnabled: bool (required)
+//   - latitude: number (required)
+//   - longitude: number (required)
+//   - speed: number | null (optional)
+//   - accuracy: number | null (optional)
+//   - lastUpdated: number (required)
+//   - lastConnection: number (required)
+//   - registeredAt: number (required)
+//
+// Collection: registrationTokens
+// Document ID: {tokenId}
+// Fields:
+//   - id: string (required)
+//   - trackingId: string (required)
+//   - driverName: string (required, max 100)
+//   - token: string (required, hex string)
+//   - createdAt: number (required)
+//   - expiresAt: number (required)
+//   - used: bool (required)
+//   - usedAt: number (optional)
+//
+// Collection: locationHistory
+// Document ID: {recordId}
+// Fields:
+//   - uid: string (required, driver uid)
+//   - latitude: number (required)
+//   - longitude: number (required)
+//   - speed: number | null (optional)
+//   - accuracy: number | null (optional)
+//   - timestamp: number (required)
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // ===============================================================
+    // Admins Collection
+    // ===============================================================
+
+    match /admins/{adminId} {
+      allow read: if isAuthenticated();
+
+      allow create: if isAuthenticated() &&
+        (isOwner(adminId) || isAdmin()) &&
+        request.resource.data.role == 'admin' &&
+        request.resource.data.email is string &&
+        request.resource.data.name is string;
+
+      allow update, delete: if isAdmin();
+    }
+
+    // ===============================================================
+    // Drivers Collection
+    // ===============================================================
+
+    match /drivers/{driverId} {
+      allow read: if isAdmin() || isOwner(driverId);
+
+      allow create: if isAdmin() || isOwner(driverId);
+
+      allow update: if isAdmin() || isOwner(driverId);
+
+      allow delete: if isAdmin();
+    }
+
+    // ===============================================================
+    // Registration Tokens Collection
+    // ===============================================================
+
+    match /registrationTokens/{tokenId} {
+      allow read: if isAuthenticated();
+      allow create, delete: if isAdmin();
+      allow update: if isAuthenticated();
+    }
+
+    // ===============================================================
+    // Location History Collection
+    // ===============================================================
+
+    match /locationHistory/{recordId} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.uid == request.auth.uid);
+      allow create: if isAdmin() || (isAuthenticated() && request.resource.data.uid == request.auth.uid);
+      allow update, delete: if isAdmin();
+    }
+  }
+}

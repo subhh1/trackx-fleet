@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+driver_app/.dart_tool/
+driver_app/.packages
+driver_app/build/
+firebase/functions/node_modules/
+
+# Build output
+dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Firebase
+firebase/functions/lib/
+.firebase/
+
+# Flutter
+driver_app/.flutter-plugins
+driver_app/.flutter-plugins-dependencies
+driver_app/android/local.properties
+driver_app/android/key.properties
+driver_app/ios/Runner.xcworkspace/xcshareddata/
+driver_app/ios/Pods/
+
+# Credentials (NEVER commit)
+google-services.json
+GoogleService-Info.plist
+*.key
+*.keystore
+.next/
+build/
+*.log

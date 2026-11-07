@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@theme {
+  --color-trackx-900: #0a0e17;
+  --color-trackx-800: #0f1520;
+  --color-trackx-700: #151d2e;
+  --color-trackx-600: #1c2740;
+  --color-trackx-500: #253352;
+  --color-trackx-400: #3a4f7a;
+  --color-trackx-300: #5a7ab5;
+  --color-trackx-200: #8aa4d4;
+  --color-trackx-100: #c4d5f0;
+  --color-accent-500: #00d4aa;
+  --color-accent-400: #33e0be;
+  --color-accent-300: #66ecd2;
+  --color-danger-500: #ff4757;
+  --color-warning-500: #ffa502;
+  --color-info-500: #3498db;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--color-trackx-900);
+  color: #e2e8f0;
+  overflow: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-trackx-800);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-trackx-500);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-trackx-400);
+}
+
+/* Leaflet overrides for dark theme */
+.leaflet-container {
+  background: #1a1a2e !important;
+  border-radius: 12px;
+}
+
+.leaflet-control-zoom a {
+  background-color: var(--color-trackx-700) !important;
+  color: #e2e8f0 !important;
+  border-color: var(--color-trackx-600) !important;
+}
+
+.leaflet-control-attribution {
+  background: rgba(15, 21, 32, 0.8) !important;
+  color: #94a3b8 !important;
+  font-size: 10px !important;
+}
+
+.leaflet-control-attribution a {
+  color: var(--color-accent-500) !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: var(--color-trackx-700) !important;
+  color: #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+.leaflet-popup-tip {
+  background: var(--color-trackx-700) !important;
+}
+
+.leaflet-popup-close-button {
+  color: #94a3b8 !important;
+}
+
+/* Pulse animation for online markers */
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.marker-pulse {
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+/* Status badge animations */
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.status-online {
+  animation: status-pulse 2s ease-in-out infinite;
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(15, 21, 32, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Smooth transitions */
+.transition-all-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

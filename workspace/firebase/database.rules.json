@@ -1,0 +1,61 @@
+{
+  "rules": {
+    "admins": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": false
+      }
+    },
+    "drivers": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
+      "$uid": {
+        ".read": "$uid === auth.uid || (auth != null && root.child('admins').child(auth.uid).exists())",
+        ".write": "$uid === auth.uid && data.child('sharingEnabled').val() === true",
+        ".validate": "newData.hasChildren(['name', 'trackingId', 'status', 'sharingEnabled', 'lastUpdated'])",
+        "trackingId": {
+          ".validate": "newData.isString() && newData.val().matches(/^TRK-[0-9]{3,}$/) && newData.val() === data.val()"
+        },
+        "name": {
+          ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 100"
+        },
+        "status": {
+          ".validate": "newData.val() === 'online' || newData.val() === 'offline' || newData.val() === 'sharing_disabled' || newData.val() === 'location_stale'"
+        },
+        "sharingEnabled": {
+          ".validate": "newData.isBoolean()"
+        },
+        "lastLocation": {
+          "latitude": { ".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90" },
+          "longitude": { ".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180" },
+          "speed": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "accuracy": { ".validate": "newData.isNumber() && newData.val() > 0" }
+        }
+      }
+    },
+    "locationHistory": {
+      "$uid": {
+        ".read": "$uid === auth.uid || (auth != null && root.child('admins').child(auth.uid).exists())",
+        ".indexOn": ["timestamp"],
+        "$recordId": {
+          ".write": "$uid === auth.uid && root.child('drivers').child($uid).child('sharingEnabled').val() === true",
+          ".validate": "newData.hasChildren(['latitude', 'longitude', 'timestamp'])",
+          "latitude": { ".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90" },
+          "longitude": { ".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180" },
+          "timestamp": { ".validate": "newData.isNumber()" }
+        }
+      }
+    },
+    "registrationTokens": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+      ".indexOn": ["token"],
+      "$tokenId": {
+        ".validate": "newData.hasChildren(['trackingId', 'driverName', 'token', 'createdAt', 'expiresAt', 'used'])"
+      }
+    },
+    "tokenValidation": {
+      ".read": false,
+      ".write": false
+    }
+  }
+}
